@@ -4,7 +4,7 @@ org 100h
 
 ;            0      2        4          6            8        10        12     14          32-33                     34 - byte
 ; save_er [off09, seg09, psw_sucss? num_of_let    true_psw                          kanareyka in the end    1/0 = true or no flag
-;                           PPPP                                                                                        1 = true
+;                           PPPPLL                                                                                     1 = true
 
 Start:
 
@@ -41,7 +41,7 @@ Main:
             mov word ptr cs:save_er[si], 10      ; start posi of where save scan codes // need_swap_for_new_offset
 
             add si, 2 ; = 8
-            mov bx, 100                          ; true psw = summ
+            mov bx, 176                          ; true psw = summ
             mov word ptr cs:save_er[si], bx
 
 
@@ -89,7 +89,7 @@ Main:
             mov dx, 9111h                       ; value of Kana
 
             cmp dx, ax
-            jne yo_bro_its_bad
+            jne bad_psw
 
             xor ax, ax
             in al, 60h                  ; al = scan from klava
@@ -149,9 +149,6 @@ Main:
             jmp end_psw___
         ;}
     ;}
-
-    yo_bro_its_bad:
-        jmp yo_bro_its_bad_1
 
     end_psw___:
     ;{
@@ -217,16 +214,12 @@ Main:
 
             push dx
             push bx
+            
+            sti
+
             retf                        ; jmp to real int9
-        ;
-     sti     ; protect from int08h
-            iret
     ;}
 
-    yo_bro_its_bad_1:
-    ;{
-        jmp bad_psw
-    ;}
 
     irritator9      endp    
 ;}
